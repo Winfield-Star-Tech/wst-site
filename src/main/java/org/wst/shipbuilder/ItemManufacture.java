@@ -78,7 +78,7 @@ public class ItemManufacture {
 			                return tm;
 			            }
 			        });
-			return materials;
+			return materials; 
 		}
 		
 		List<TypeMaterial> lookupPrices(List<TypeMaterial> materials) {
