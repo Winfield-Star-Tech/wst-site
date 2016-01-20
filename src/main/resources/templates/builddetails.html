@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p th:text="'id: ' + ${type.id} + ', name: ' + ${type.name}" />
+  <p th:text="' Blueprint Name = ' + ${blueprint.name}" />
+  
+ 
+          <table>
+          <thead>
+          	<tr>
+          		<th>Material ID</th>
+          		<th>Material Name</th>
+          		<th>Quantity</th>
+          	</tr>
+          </thead>
+            <tbody>
+              <tr th:each="row : ${materials}">
+                <td th:text="${row.materialId}"></td>
+                <td th:text="${row.materialName}"></td>
+                <td th:text="${row.quantity}"></td>
+              </tr>
+            </tbody>
+          </table>
+</body>
+</html>
