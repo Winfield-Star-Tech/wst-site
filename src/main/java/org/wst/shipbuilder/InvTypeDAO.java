@@ -3,7 +3,11 @@ package org.wst.shipbuilder;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,37 +22,31 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-@Controller
-@Configuration
-public class ItemManufacture {
-
-	static Logger log = Logger.getLogger(ItemManufacture.class.getName());
+public class InvTypeDAO {
+	static Logger log = Logger.getLogger(ItemManufactureDAO.class.getName());
 	 private JdbcTemplate jdbcTemplate;
 
 	    @Autowired
 	    public void setDataSource(DataSource dataSource) {
 	        this.jdbcTemplate = new JdbcTemplate(dataSource);
 	    }
-	    Long findBlueprint(Long typeID) {
+
+	    public Long findBlueprint(Long typeID) {
 	    	Long blueprintID = this.jdbcTemplate.queryForObject(
 	    			"select \"typeID\" from \"industryActivityProducts\" where \"activityID\"=1 and"
 	    			+ " \"productTypeID\"=?", 
 	    			new Object[] {typeID}, Long.class);
 	    	return blueprintID;
 	    }
-		InvType findType(Long id) {
+
+	    public InvType findType(Long id) {
 			InvType it = this.jdbcTemplate.queryForObject(
 			        "select \"typeName\"  as typename, \"typeID\" id from \"invTypes\" where \"typeID\" = ?",
 			        new Object[]{id},
@@ -63,32 +61,92 @@ public class ItemManufacture {
 			        });
 			return it;
 		}
+	    
+	    public List<InvType> findAllShips() {
+	    	final String qry = "select t.* from \"invGroups\" g, \"invTypes\" t where g.\"categoryID\"=6 and g.\"groupID\" = t.\"groupID\"";
+	    	List<InvType> ships = new ArrayList<InvType>();
+	    	ships = this.jdbcTemplate.query(
+			        qry,
+			        new Object[]{},
+			        new RowMapper<InvType>() {
+			            public InvType mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            	InvType it = new InvType();
+			            	it.setId(rs.getLong("typeID"));
+			            	it.setName(rs.getString("typeName"));
+
+			                return it;
+			            }
+			        });
+	    	
+	    	return ships;
+	    }
 		
-		List<TypeMaterial> findMaterials(InvType type) {
+		public List<BOMEntry> findMaterials(InvType type) {
 			String qry = "select \"typeName\",\"materialTypeID\",quantity from \"industryActivityMaterials\" as iam join \"invTypes\" on (iam.\"materialTypeID\"=\"invTypes\".\"typeID\") where \"activityID\"=1 and iam.\"typeID\"=?";
-			List<TypeMaterial> materials = this.jdbcTemplate.query(
+			List<BOMEntry> materials = this.jdbcTemplate.query(
 			        qry,
 			        new Object[]{type.getId()},
-			        new RowMapper<TypeMaterial>() {
-			            public TypeMaterial mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            	TypeMaterial tm = new TypeMaterial();
-			            	tm.setMaterialId(rs.getLong("materialTypeID"));
-			            	tm.setMaterialName(rs.getString("typeName"));
+			        new RowMapper<BOMEntry>() {
+			            public BOMEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            	BOMEntry tm = new BOMEntry();
+			            	tm.setId(rs.getLong("materialTypeID"));
+			            	tm.setName(rs.getString("typeName"));
 			            	tm.setQuantity(rs.getLong("quantity"));
 			                return tm;
 			            }
 			        });
 			return materials; 
 		}
-		
-		List<TypeMaterial> lookupPrices(List<TypeMaterial> materials) {
+		public void lookupPrices(Collection<? extends InvType> items, List<Long> regions) {
 			log.info("looking up prices");
+			Map<Long, Double> sellPrices = lookupItemPrices(items, 's', regions);
+			Map<Long, Double> buyPrices = lookupItemPrices(items, 'b', regions);
+			for (InvType i : items) {
+				if (sellPrices.containsKey(i.getId())) {
+					i.getPrice().setSellPrice(sellPrices.get(i.getId()));
+				} else {
+					log.info("Could not find sell price for id=" + i.getId());
+				}
+				i.getPrice().setBuyPrice(buyPrices.get(i.getId()));
+			}
+		}
+		
+		private Map<Long, Double> lookupItemPrices(Collection<? extends InvType> items, char buySell, List<Long> regions) {
+			Map<Long,Double> result = new HashMap<Long, Double>();
+			final String baseURL = "http://eve-marketdata.com/api/item_prices2.xml?char_name=demo&type_ids=";
+			String dataURL = baseURL;
+			StringBuilder sb = new StringBuilder();
+
+			String loopDelim="";
+			for (InvType i : items) {
+				sb.append(loopDelim);
+				sb.append(i.getId());
+				loopDelim = ",";
+			}
+			
+			dataURL += sb.toString();
+			
+			sb = new StringBuilder();
+			loopDelim="";
+			for (long id : regions) {
+				sb.append(loopDelim);
+				sb.append(id);
+				loopDelim = ",";
+			}
+			dataURL += "&region_ids=";
+			dataURL += sb.toString();
+			dataURL += "&buysell=";
+			dataURL += buySell;
+			
+			
+			
+			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
 			try {
 				builder = factory.newDocumentBuilder();
 			
-			Document doc = builder.parse("http://eve-marketdata.com/api/item_prices2.xml?char_name=demo&type_ids=34,12068,35,36&region_ids=10000002&buysell=s");
+			Document doc = builder.parse(dataURL);
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
 			XPathExpression expr = xpath.compile("/emd/result/rowset/row");
@@ -96,7 +154,11 @@ public class ItemManufacture {
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node n = nl.item(i);
 				String price = n.getAttributes().getNamedItem("price").getNodeValue();
-				log.info("Found price of " + price);
+				String idStr = n.getAttributes().getNamedItem("typeID").getNodeValue();
+				Double d = new Double(price);
+				Long id = new Long(idStr);
+				result.put(id, d);
+				log.info("Found price of " + d + " for id " + id);
 			}
 			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
@@ -111,20 +173,8 @@ public class ItemManufacture {
 				// TODO Auto-generated catch block
 				log.log(Level.SEVERE, "Error", e);
 			}
-			return materials;
+			
+			return result;
 		}
-		
-		@RequestMapping("/buildItem")
-		public String buildItem(@RequestParam(value="id", required=false, defaultValue="26") String id, Model model) {
-	        model.addAttribute("id", id);
-	        InvType it = findType(new Long(id));
-	        model.addAttribute("type", it);
-	        InvType blueprint = findType(findBlueprint(it.getId()));
-	        List<TypeMaterial> materials = findMaterials(blueprint);
-	        materials = lookupPrices(materials);
-	        model.addAttribute("blueprint", blueprint);
-	        model.addAttribute("materials", materials);
-	        return "buildDetails";
-	    }
-	String qry ="select typeName,materialTypeID,quantity from industryActivityMaterials iam join invTypes on (iam.materialTypeID=invTypes.typeID) where activityid=1 and iam.typeid=1320";
+
 }
