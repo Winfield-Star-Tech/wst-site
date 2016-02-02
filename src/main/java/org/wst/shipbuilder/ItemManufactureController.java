@@ -12,6 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.wst.shipbuilder.data.InvTypeDAO;
+import org.wst.shipbuilder.data.ItemManufactureDAO;
+import org.wst.shipbuilder.data.entities.BOMEntry;
+import org.wst.shipbuilder.data.entities.InvType;
+import org.wst.shipbuilder.data.entities.ShipBOM;
 
 import sun.util.logging.resources.logging;
 
@@ -38,7 +43,7 @@ public class ItemManufactureController {
         InvType it = invTypeDAO.findType(new Long(id));
         model.addAttribute("type", it);
         InvType blueprint = invTypeDAO.findType(invTypeDAO.findBlueprint(it.getId()));
-        List<BOMEntry> materials = invTypeDAO.findMaterials(blueprint);
+        List<BOMEntry> materials = itemManufactureDAO.findMaterials(blueprint);
         List<Long> regions = new ArrayList<Long>();
         regions.add(10000042L);
         List<InvType> items = new ArrayList<InvType>();
@@ -46,7 +51,7 @@ public class ItemManufactureController {
         for (InvType b : materials) {
         	items.add(b);
         }
-        invTypeDAO.lookupPrices(items, regions);
+        itemManufactureDAO.lookupPrices(items, regions);
         double totalCost = 0;
         for (BOMEntry b : materials) {
         	totalCost += b.getQuantity() * b.getPrice().getBuyPrice();
@@ -77,7 +82,7 @@ public class ItemManufactureController {
 			InvType blueprint = invTypeDAO.findType(invTypeDAO.findBlueprint(t.getId()));
 			if(count++ > 50) break;
 			items.add(t);
-			List<BOMEntry> materials = invTypeDAO.findMaterials(blueprint);
+			List<BOMEntry> materials = itemManufactureDAO.findMaterials(blueprint);
 	        for (InvType b : materials) {
 	        	items.add(b);
 	        }		
@@ -87,7 +92,7 @@ public class ItemManufactureController {
 			}
 		}
 		
-        invTypeDAO.lookupPrices(items, regions);
+		itemManufactureDAO.lookupPrices(items, regions);
         for (ShipBOM s : shipBOMs) {
         	double buildCost = 0;
         	for (BOMEntry be : s.getMaterials()) {
