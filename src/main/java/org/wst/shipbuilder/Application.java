@@ -27,19 +27,12 @@ public class Application {
     	dataSource.setPassword("shipmaker");
     	return dataSource;
     }
-  /*  <bean id="dataSource" 
-    		 class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-    		    <property name="driverClassName">
-    		         <value>${jdbc.driver}</value>
-    		    </property>
-    		    <property name="url">
-    		         <value>${jdbc.url}</value>
-    		    </property>
-    		    <property name="username">
-    		         <value>${jdbc.user}</value>
-    		    </property>
-    		    <property name="password">
-    		         <value>${jdbc.password}</value>
-    		    </property>
-    		</bean> */
+    @Bean
+    public ItemManufactureDAO itemManufactureDAO() {
+    	return new ItemManufactureDAO();
+    }
+    @Bean
+    public InvTypeDAO invTypeDAO() {
+    	return new InvTypeDAO();
+    }
 }

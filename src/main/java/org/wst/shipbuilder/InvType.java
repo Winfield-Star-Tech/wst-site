@@ -1,8 +1,17 @@
 package org.wst.shipbuilder;
 
 public class InvType {
-	Long id;
-	String name;
+	private Long id;
+	private String name;
+	private PriceDetail price = new PriceDetail();
+	
+	
+	public PriceDetail getPrice() {
+		return price;
+	}
+	public void setPrice(PriceDetail price) {
+		this.price = price;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -15,4 +24,5 @@ public class InvType {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 }
