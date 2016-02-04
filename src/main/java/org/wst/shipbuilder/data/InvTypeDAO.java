@@ -1,34 +1,16 @@
 package org.wst.shipbuilder.data;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.wst.shipbuilder.data.entities.InvType;
-import org.xml.sax.SAXException;
 
 public class InvTypeDAO {
 	static Logger log = Logger.getLogger(ItemManufactureDAO.class.getName());
@@ -52,7 +34,8 @@ public class InvTypeDAO {
 			        "select \"typeName\"  as typename, \"typeID\" id from \"invTypes\" where \"typeID\" = ?",
 			        new Object[]{id},
 			        new RowMapper<InvType>() {
-			            public InvType mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            @Override
+						public InvType mapRow(ResultSet rs, int rowNum) throws SQLException {
 			            	InvType it = new InvType();
 			            	it.setId(rs.getLong("id"));
 			            	it.setName(rs.getString("typename"));
@@ -70,7 +53,8 @@ public class InvTypeDAO {
 			        qry,
 			        new Object[]{},
 			        new RowMapper<InvType>() {
-			            public InvType mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            @Override
+						public InvType mapRow(ResultSet rs, int rowNum) throws SQLException {
 			            	InvType it = new InvType();
 			            	it.setId(rs.getLong("typeID"));
 			            	it.setName(rs.getString("typeName"));

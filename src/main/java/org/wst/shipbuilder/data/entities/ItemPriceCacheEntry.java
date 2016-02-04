@@ -2,6 +2,7 @@ package org.wst.shipbuilder.data.entities;
 
 import java.io.Serializable;
 
+ 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;

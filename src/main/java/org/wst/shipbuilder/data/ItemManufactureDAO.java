@@ -50,7 +50,7 @@ public class ItemManufactureDAO {
 	 }
 	 
 	 public void refreshPrices() {
-		 priceCache.findAll(new Pageable());
+		 priceCache.findAll();
 		 
 	 }
 	    @Autowired

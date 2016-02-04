@@ -18,8 +18,6 @@ import org.wst.shipbuilder.data.entities.BOMEntry;
 import org.wst.shipbuilder.data.entities.InvType;
 import org.wst.shipbuilder.data.entities.ShipBOM;
 
-import sun.util.logging.resources.logging;
-
 @Controller
 
 public class ItemManufactureController {
