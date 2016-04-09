@@ -1,6 +1,7 @@
 package org.wst.shipbuilder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,14 +43,13 @@ public class ItemManufactureController {
         model.addAttribute("type", it);
         InvType blueprint = invTypeDAO.findType(invTypeDAO.findBlueprint(it.getId()));
         List<BOMEntry> materials = itemManufactureDAO.findMaterials(blueprint);
-        List<Long> regions = new ArrayList<Long>();
-        regions.add(10000042L);
+        
         List<InvType> items = new ArrayList<InvType>();
         items.add(it);
         for (InvType b : materials) {
         	items.add(b);
         }
-        itemManufactureDAO.lookupPrices(items, regions);
+        itemManufactureDAO.lookupPrices(items);
         double totalCost = 0;
         for (BOMEntry b : materials) {
         	totalCost += b.getQuantity() * b.getPrice().getBuyPrice();
@@ -69,8 +69,7 @@ public class ItemManufactureController {
 	@RequestMapping("/buildItem/all")
 	public String buildAllItems( Model model) {
 		List<InvType> ships = invTypeDAO.findAllShips();
-		List<Long> regions = new ArrayList<Long>();
-        regions.add(10000042L);
+		
         Set<InvType> items = new HashSet<InvType>();
         List<ShipBOM> shipBOMs = new ArrayList<ShipBOM>();
         int count = 0;
@@ -78,27 +77,45 @@ public class ItemManufactureController {
 			
 			try {
 			InvType blueprint = invTypeDAO.findType(invTypeDAO.findBlueprint(t.getId()));
-			if(count++ > 50) break;
-			items.add(t);
-			List<BOMEntry> materials = itemManufactureDAO.findMaterials(blueprint);
-	        for (InvType b : materials) {
-	        	items.add(b);
-	        }		
-	        shipBOMs.add(new ShipBOM(t,blueprint, materials));
+			//if(t.getPrice().getSellPrice() > 0) {
+				//if(count++ > 50) break;
+				items.add(t);
+				List<BOMEntry> materials = itemManufactureDAO.findMaterials(blueprint);
+		        for (InvType b : materials) {
+		        	items.add(b);
+		        }		
+		        shipBOMs.add(new ShipBOM(t,blueprint, materials));
+			//}
 			} catch (EmptyResultDataAccessException e) {
 				log.severe(e.getLocalizedMessage());
 			}
 		}
 		
-		itemManufactureDAO.lookupPrices(items, regions);
+		itemManufactureDAO.lookupPrices(items);
+		List<ShipBOM> validShipBOMs = new ArrayList<ShipBOM>();
         for (ShipBOM s : shipBOMs) {
         	double buildCost = 0;
+        	// Only good if we've got a price for it
+        	boolean isGood = s.getShip().getPrice().getSellPrice() > 0;
         	for (BOMEntry be : s.getMaterials()) {
         		buildCost += (be.getQuantity() * be.getPrice().getSellPrice());
+        		if(isGood) isGood = be.getPrice().getSellPrice() > 0;
         	}
         	s.setBuildCost(buildCost);
+        	if(isGood) {
+        		validShipBOMs.add(s);
+        	}
         }
-        model.addAttribute("ships", shipBOMs);
+        
+        validShipBOMs.sort(new Comparator<ShipBOM> () {
+
+			@Override
+			public int compare(ShipBOM arg0, ShipBOM arg1) {
+				return (int)(arg1.getMargin() - arg0.getMargin());
+			}
+        	
+        });
+        model.addAttribute("ships", validShipBOMs);
 		return "buildAll";
 	}
 
