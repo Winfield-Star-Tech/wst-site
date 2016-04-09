@@ -26,7 +26,9 @@
           </thead>
             <tbody>
               <tr th:each="row : ${ships}" th:class="${row.profit > 0} ? 'success' : 'danger'">
-                <td th:text="${row.ship.name}"></td>
+                <td><a th:href="@{/buildItem/?id=${row.ship.typeId}}">
+                <span th:text="${row.ship.name}"></span>
+                </a></td>
                 <td th:text="${#numbers.formatInteger(row.ship.price.sellPrice, 0, 'COMMA')}"></td>
                 <td th:text="${#numbers.formatInteger(row.buildCost, 0, 'COMMA')}"></td>
                 <td th:text="${#numbers.formatInteger(row.profit, 0, 'COMMA')}"></td>

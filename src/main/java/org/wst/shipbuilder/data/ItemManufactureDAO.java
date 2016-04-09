@@ -3,10 +3,15 @@ package org.wst.shipbuilder.data;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +27,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,6 +40,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wst.shipbuilder.data.entities.BOMEntry;
 import org.wst.shipbuilder.data.entities.InvType;
+import org.wst.shipbuilder.data.entities.ItemPriceCacheEntry;
 import org.xml.sax.SAXException;
 
 
@@ -50,7 +57,60 @@ public class ItemManufactureDAO {
 	 }
 	 
 	 public void refreshPrices() {
-		 priceCache.findAll();
+		 
+		 Map<Long, ItemPriceCacheEntry> entries = new HashMap<Long, ItemPriceCacheEntry>();
+		 for(ItemPriceCacheEntry entry : priceCache.findAll()) {
+			 entries.put(entry.getTypeId(), entry);
+		 }
+		 List<InvType> ships = invTypeDAO.findAllShips();
+		 SortedMap<Long, InvType> thingsToFind = new TreeMap<Long,InvType>();
+		 for(InvType ship : ships) {
+			 thingsToFind.put(ship.getId(),ship);
+			 try {
+				 InvType blueprint = invTypeDAO.findType(invTypeDAO.findBlueprint(ship.getId()));
+				 List<BOMEntry> boms = findMaterials(blueprint);
+				 log.info("Blueprint " + blueprint.getName() + " has requirements of :");
+				 StringBuilder sb = new StringBuilder();
+				 for(BOMEntry b : boms) {
+					 thingsToFind.put(b.getId(), b);
+					 sb.append(",").append(b.getId());
+				 }
+				 log.info(sb.toString());
+			 } catch (EmptyResultDataAccessException e) {
+				 log.warning("Could not find blueprint for ship " + ship.getName());
+			 }
+		 }
+		 Set<InvType> items = new HashSet<InvType>(thingsToFind.values());
+		 log.info("Going to look up " + items.size() + " items");
+		 for (InvType t : items) {
+			 log.info("going to look for inv type " + t.getId());
+		 }
+		 List<Long> regions = new ArrayList<Long>();
+	     regions.add(10000042L);
+		 List<InvType> batch = new ArrayList<InvType>();
+		 for(InvType item : items) {
+			 batch.add(item);
+			 if(batch.size() == 10) {
+				 lookupPricesFromWeb(batch, regions);
+				 batch.clear();
+			 }	 
+		 }
+		 
+		 
+		 // Catch any stragglers
+		 lookupPricesFromWeb(batch, regions);
+		 
+		 for(InvType item : items) {
+			 ItemPriceCacheEntry ipce = entries.get(item.getId());
+			 if (ipce != null) {
+				 ipce.setBuyPrice(item.getPrice().getBuyPrice());
+				 ipce.setSellPrice(item.getPrice().getSellPrice());
+				 priceCache.save(ipce);
+			 } else {
+				 ipce = new ItemPriceCacheEntry(item.getId(), item.getPrice().getSellPrice(), item.getPrice().getBuyPrice());
+				 priceCache.save(ipce);
+			 }
+		 }
 		 
 	 }
 	    @Autowired
@@ -77,7 +137,16 @@ public class ItemManufactureDAO {
 			        });
 			return materials; 
 		}
-		public void lookupPrices(Collection<? extends InvType> items, List<Long> regions) {
+		public void lookupPrices(Collection<? extends InvType> items) {
+			for (InvType t : items) {
+				ItemPriceCacheEntry e = priceCache.findByTypeId(t.getId());
+				if (e != null) {
+					t.getPrice().setBuyPrice(e.getBuyPrice());
+					t.getPrice().setSellPrice(e.getSellPrice());
+				}
+			}
+		}
+		private void lookupPricesFromWeb(Collection<? extends InvType> items, List<Long> regions) {
 			log.info("looking up prices");
 			Map<Long, Double> sellPrices = lookupItemPrices(items, 's', regions);
 			Map<Long, Double> buyPrices = lookupItemPrices(items, 'b', regions);
@@ -89,6 +158,12 @@ public class ItemManufactureDAO {
 				}
 				i.getPrice().setBuyPrice(buyPrices.get(i.getId()));
 			}
+/*			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 		}
 		private Map<Long, Double> lookupItemPrices(Collection<? extends InvType> items, char buySell, List<Long> regions) {
 			Map<Long,Double> result = new HashMap<Long, Double>();
