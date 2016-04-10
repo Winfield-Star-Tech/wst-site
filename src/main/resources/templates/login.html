@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headtag"/> 
+<body>
+   
+
+
+<div id="wrapper">
+
+<header th:replace="fragments/header :: header"/>
+
+<div id="main">
+    <div id="content">
+        <section>
+            <div class="container">
+        <div th:if="${param.error}">
+            Invalid username and password.
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <form th:action="@{/login}" method="post">
+            <div><label> User Name : <input type="text" name="username"/> (user) </label></div>
+            <div><label> Password: <input type="password" name="password"/> (password)</label></div>
+            <div><input type="submit" value="Sign In"/></div>
+        </form>
+        </div>
+       </section>
+    </div>
+</div><!-- #main -->
+
+
+<footer>
+<div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+<!-- /#top-bar -->
+</footer><!-- /footer -->
+
+
+
+</div><!-- /#wrapper -->
+<script type="text/javascript" src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="webjars/jquery/2.1.1/jquery.min.js"></script>
+</body>
+</html>
