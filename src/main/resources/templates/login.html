@@ -19,11 +19,8 @@
         <div th:if="${param.logout}">
             You have been logged out.
         </div>
-        <form th:action="@{/login}" method="post">
-            <div><label> User Name : <input type="text" name="username"/> (user) </label></div>
-            <div><label> Password: <input type="password" name="password"/> (password)</label></div>
-            <div><input type="submit" value="Sign In"/></div>
-        </form>
+        <a th:href="@{/login/facebook}"><img th:src="@{/resources/images/EVE_SSO_Login_Buttons_Small_Black.png}"/></a>
+        
         </div>
        </section>
     </div>
