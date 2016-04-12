@@ -92,7 +92,9 @@ public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
 	private void lookupRoles(Map<String, Object> map) {
 		String characterName = (String)map.get(CHARACTER_NAME);
 		
-		if(characterName.equalsIgnoreCase("Kalfar") || characterName.equalsIgnoreCase("Toshuu Milia")) {
+		if(characterName.equalsIgnoreCase("Kalfar") 
+				|| characterName.equalsIgnoreCase("Toshuu Milia")
+				|| characterName.equalsIgnoreCase("Cole Winfield")) {
 			addRole("ROLE_ADMIN", map);			
 		}		
 		String corporation = (String)map.get("corporation");
