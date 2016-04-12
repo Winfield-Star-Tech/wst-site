@@ -14,11 +14,12 @@
         </h1>
         <nav>
             <a href="/">Home</a>
-            <a href="/operation-hephaestus">Operation Hephaestus</a>
-            <a href="/ship-orders">Ship Orders</a>
+            <a sec:authorize="isAuthenticated()"  th:href="@{/operation-hephaestus}">Operation Hephaestus</a>
+            <a  sec:authorize="isAuthenticated()" th:href="@{/ship-orders}">Ship Orders</a>
   <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Log out</a>
 
   <a sec:authorize="isAnonymous()" th:href="@{/login}">Log in</a>
+  <a sec:authorize="hasRole('ROLE_ADMIN')"  th:href="@{/admin}">Admin</a>
 
            
         </nav>
