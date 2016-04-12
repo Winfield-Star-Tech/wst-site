@@ -122,10 +122,12 @@ section {
 	display: block;
     width: 50%; }
   #info-bar span.all-tutorials {
-    float: left;
+  	color: orange;
+	float: left;
     text-align: left; }
   #info-bar span.login-details {
-    display: block;
+  	color: orange;
+	display: block;
     width: 50%;
     float: right;
     text-align: right; }
