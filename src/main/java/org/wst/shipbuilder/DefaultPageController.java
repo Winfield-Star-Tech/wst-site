@@ -53,6 +53,10 @@ public class DefaultPageController extends WebSecurityConfigurerAdapter {
 	public String greeting(Model model) {
 		return "index";
 	}
+	@RequestMapping("/admin")
+	public String admin(Model model) {
+		return "admin";
+	}
 	
 	@RequestMapping("/toshuu")
 	public String toshuu(Model model) {
@@ -89,8 +93,9 @@ public class DefaultPageController extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off	
 		http.antMatcher("/**")
-			.authorizeRequests()
+			.authorizeRequests()				
 				.antMatchers("/", "/login**", "/webjars/**", "/home", "/resources/**", "/toshuu").permitAll()
+				.antMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().authenticated()
 			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
 			.and().logout().logoutSuccessUrl("/").permitAll()
@@ -111,24 +116,24 @@ public class DefaultPageController extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public Filter ssoFilter() {
-		OAuth2ClientAuthenticationProcessingFilter facebookFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/facebook");
-		OAuth2RestTemplate facebookTemplate = new OAuth2RestTemplate(facebook(), oauth2ClientContext) ;
-		facebookFilter.setRestTemplate(facebookTemplate);
-		facebookFilter.setTokenServices(new EveUserInfoTokenServices(facebookResource().getUserInfoUri(), facebook().getClientId()));
-		return facebookFilter;
+		OAuth2ClientAuthenticationProcessingFilter evessoFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/evesso");
+		OAuth2RestTemplate evessoTemplate = new OAuth2RestTemplate(evesso(), oauth2ClientContext) ;
+		evessoFilter.setRestTemplate(evessoTemplate);
+		evessoFilter.setTokenServices(new EveUserInfoTokenServices(evessoResource().getUserInfoUri(), evesso().getClientId()));
+		return evessoFilter;
 	}
 
 	@Bean
-	@ConfigurationProperties("facebook.client")
-	OAuth2ProtectedResourceDetails facebook() {
+	@ConfigurationProperties("evesso.clientremote")
+	OAuth2ProtectedResourceDetails evesso() {
 		return new AuthorizationCodeResourceDetails();
 	}
 	
 	
 
 	@Bean
-	@ConfigurationProperties("facebook.resource")
-	ResourceServerProperties facebookResource() {
+	@ConfigurationProperties("evesso.resource")
+	ResourceServerProperties evessoResource() {
 		return new ResourceServerProperties();
 	}
 
