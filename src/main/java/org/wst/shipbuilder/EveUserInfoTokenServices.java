@@ -2,6 +2,7 @@ package org.wst.shipbuilder;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -34,6 +35,8 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.wst.shipbuilder.data.EveUser;
+import org.wst.shipbuilder.data.EveUserRepository;
 import org.xml.sax.SAXException;
 
 public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
@@ -84,11 +87,24 @@ public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
 		}
 		getExtraUserInfo(map);
 		lookupRoles(map);
-		
+		recordLogin(map);
 		return extractAuthentication(map);
 	}
 
 	
+	private void recordLogin(Map<String, Object> map) {
+		String characterName = (String)map.get(CHARACTER_NAME);
+		String corporation = (String)map.get("corporation");
+		Integer characterID = (Integer)map.get(CHARACTER_ID);
+		
+		EveUser u = userRepository.findOne((long)characterID);
+		if(u == null) {
+			u = new EveUser(characterID, characterName, corporation);
+		}
+		u.setLastLoginDate(new Date());
+		userRepository.save(u);
+	}
+
 	private void lookupRoles(Map<String, Object> map) {
 		String characterName = (String)map.get(CHARACTER_NAME);
 		
@@ -210,6 +226,12 @@ public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
 			return Collections.<String, Object>singletonMap("error",
 					"Could not fetch user details");
 		}
+	}
+
+	private EveUserRepository userRepository;
+	public void setEveUserRepository(EveUserRepository userRepository) {
+		this.userRepository = userRepository;
+		
 	}
 
 }

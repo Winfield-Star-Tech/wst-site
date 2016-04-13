@@ -41,6 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
+import org.wst.shipbuilder.data.EveUser;
+import org.wst.shipbuilder.data.EveUserRepository;
 
 @Controller
 
@@ -49,12 +51,18 @@ import org.springframework.web.util.WebUtils;
 
 public class DefaultPageController extends WebSecurityConfigurerAdapter {
 	private int donations = 0;
+	
+	@Autowired
+	private EveUserRepository userRepository;
+	
 	@RequestMapping("/")
 	public String greeting(Model model) {
 		return "index";
 	}
 	@RequestMapping("/admin")
 	public String admin(Model model) {
+		Iterable<EveUser> users = userRepository.findAll();
+		model.addAttribute("users", users);
 		return "admin";
 	}
 	
@@ -119,7 +127,9 @@ public class DefaultPageController extends WebSecurityConfigurerAdapter {
 		OAuth2ClientAuthenticationProcessingFilter evessoFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/evesso");
 		OAuth2RestTemplate evessoTemplate = new OAuth2RestTemplate(evesso(), oauth2ClientContext) ;
 		evessoFilter.setRestTemplate(evessoTemplate);
-		evessoFilter.setTokenServices(new EveUserInfoTokenServices(evessoResource().getUserInfoUri(), evesso().getClientId()));
+		EveUserInfoTokenServices tokenServices =  new EveUserInfoTokenServices(evessoResource().getUserInfoUri(), evesso().getClientId());
+		tokenServices.setEveUserRepository(userRepository);
+		evessoFilter.setTokenServices(tokenServices);
 		return evessoFilter;
 	}
 
