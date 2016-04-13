@@ -46,10 +46,9 @@ import org.wst.shipbuilder.data.EveUserRepository;
 
 @Controller
 
-@Configuration
-@EnableOAuth2Client
 
-public class DefaultPageController extends WebSecurityConfigurerAdapter {
+
+public class DefaultPageController{
 	private int donations = 0;
 	
 	@Autowired
@@ -93,86 +92,4 @@ public class DefaultPageController extends WebSecurityConfigurerAdapter {
 	    return "redirect:/login?logout";//You can redirect wherever you want, but generally it's a good practice to show login screen again.
 	}
 
-	@Autowired
-	OAuth2ClientContext oauth2ClientContext;
-
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		// @formatter:off	
-		http.antMatcher("/**")
-			.authorizeRequests()				
-				.antMatchers("/", "/login**", "/webjars/**", "/home", "/resources/**", "/toshuu").permitAll()
-				.antMatchers("/admin").hasRole("ADMIN")
-				.anyRequest().authenticated()
-			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
-			.and().logout().logoutSuccessUrl("/").permitAll()
-			.and().csrf().csrfTokenRepository(csrfTokenRepository())
-			.and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
-			.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
-		// @formatter:on
-	}
-
-	@Bean
-	public FilterRegistrationBean oauth2ClientFilterRegistration(
-			OAuth2ClientContextFilter filter) {
-		FilterRegistrationBean registration = new FilterRegistrationBean();
-		registration.setFilter(filter);
-		registration.setOrder(-101);
-		return registration;
-	}
-
-	@Bean
-	public Filter ssoFilter() {
-		OAuth2ClientAuthenticationProcessingFilter evessoFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/evesso");
-		OAuth2RestTemplate evessoTemplate = new OAuth2RestTemplate(evesso(), oauth2ClientContext) ;
-		evessoFilter.setRestTemplate(evessoTemplate);
-		EveUserInfoTokenServices tokenServices =  new EveUserInfoTokenServices(evessoResource().getUserInfoUri(), evesso().getClientId());
-		tokenServices.setEveUserRepository(userRepository);
-		evessoFilter.setTokenServices(tokenServices);
-		return evessoFilter;
-	}
-
-	@Bean
-	@ConfigurationProperties("evesso.client")
-	OAuth2ProtectedResourceDetails evesso() {
-		return new AuthorizationCodeResourceDetails();
-	}
-	
-	
-
-	@Bean
-	@ConfigurationProperties("evesso.resource")
-	ResourceServerProperties evessoResource() {
-		return new ResourceServerProperties();
-	}
-
-	private Filter csrfHeaderFilter() {
-		return new OncePerRequestFilter() {
-			@Override
-			protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-					FilterChain filterChain) throws ServletException, IOException {
-				CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-				if (csrf != null) {
-					Cookie cookie = WebUtils.getCookie(request, "XSRF-TOKEN");
-					String token = csrf.getToken();
-					if (cookie == null || token != null && !token.equals(cookie.getValue())) {
-						cookie = new Cookie("XSRF-TOKEN", token);
-						cookie.setPath("/");
-						response.addCookie(cookie);
-					}
-				}
-				filterChain.doFilter(request, response);
-			}
-		};
-	}
-
-	private CsrfTokenRepository csrfTokenRepository() {
-		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-		repository.setHeaderName("X-XSRF-TOKEN");
-		return repository;
-	}
-	@Bean public RequestContextListener requestContextListener(){
-	    return new RequestContextListener();
-	} 
 }
