@@ -70,7 +70,7 @@ public class Application {
 
       LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
       factory.setJpaVendorAdapter(vendorAdapter);
-      factory.setPackagesToScan("org.wst.shipbuilder.data.entities");
+      factory.setPackagesToScan("org.wst.shipbuilder.data");
       factory.setDataSource(dataSource());
       factory.afterPropertiesSet();
 

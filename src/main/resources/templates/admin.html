@@ -15,6 +15,23 @@
             <div class="container">
             
     <h1>Admin pages</h1>
+    <h2>User Details</h2>
+    <table class="table">
+          <thead>
+          	<tr>
+          		<th>Character Name</th>
+          		<th>Corporation</th>
+          		<th>Last Login</th>
+          	</tr>
+          </thead>
+            <tbody>
+              <tr th:each="user : ${users}">
+                <td th:text="${user.characterName}"></td>
+                <td th:text="${user.corporationName}"></td>
+                <td th:text="${user.lastLoginDate != null} ? ${#dates.format(user.lastLoginDate, 'dd-MMM-yyyy HH:mm:ss')} : ''"></td>
+                </tr>
+                </tbody>
+                </table>
             </div>
         </section>
     </div>
