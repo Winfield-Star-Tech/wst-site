@@ -134,7 +134,7 @@ public class DefaultPageController extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	@ConfigurationProperties("evesso.clientremote")
+	@ConfigurationProperties("evesso.client")
 	OAuth2ProtectedResourceDetails evesso() {
 		return new AuthorizationCodeResourceDetails();
 	}

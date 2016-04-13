@@ -1,16 +1,7 @@
 evesso:
-  clientlocal:
+  client:
     clientId: 55df9334f37e4e96a0e373bfe621658c
     clientSecret: iylulvPNU422wL9xrynoze5chVznoJxTGXivIVls
-    accessTokenUri: https://login.eveonline.com/oauth/token
-    userAuthorizationUri: https://login.eveonline.com/oauth/authorize
-    tokenName: oauth_token
-    authenticationScheme: query
-    clientAuthenticationScheme: form
-    scope: publicData
-  clientremote:
-    clientId: f6cfa86f89654ee2b3cd1fe369ba4c33
-    clientSecret: ajYLIIzjcgGPdwKjbnKl7wzKShAq5FMwU9DCRwQZ
     accessTokenUri: https://login.eveonline.com/oauth/token
     userAuthorizationUri: https://login.eveonline.com/oauth/authorize
     tokenName: oauth_token
