@@ -13,9 +13,9 @@ evesso:
 
 logging:
   level:
-    org.springframework.security: TRACE
-    org.springframework.http.converter: TRACE
-    org.springframework.web.client: DEBUG
+    org.wst: DEBUG
+#    org.springframework.http.converter: TRACE
+#    org.springframework.web.client: DEBUG
   file: application.log
 
 spring:

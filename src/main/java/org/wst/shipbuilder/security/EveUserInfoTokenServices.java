@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedAuthoritiesExtractor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -86,13 +87,13 @@ public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
 			throw new InvalidTokenException(accessToken);
 		}
 		getExtraUserInfo(map);
-		lookupRoles(map);
-		recordLogin(map);
+		EveUser u = recordLogin(map);
+		lookupRoles(u, map);
 		return extractAuthentication(map);
 	}
 
 	
-	private void recordLogin(Map<String, Object> map) {
+	private EveUser recordLogin(Map<String, Object> map) {
 		String characterName = (String)map.get(CHARACTER_NAME);
 		String corporation = (String)map.get("corporation");
 		Integer characterID = (Integer)map.get(CHARACTER_ID);
@@ -103,9 +104,10 @@ public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
 		}
 		u.setLastLoginDate(new Date());
 		userRepository.save(u);
+		return u;
 	}
 
-	private void lookupRoles(Map<String, Object> map) {
+	private void lookupRoles(EveUser u, Map<String, Object> map) {
 		String characterName = (String)map.get(CHARACTER_NAME);
 		
 		if(characterName.equalsIgnoreCase("Kalfar") 
@@ -114,9 +116,9 @@ public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
 			addRole("ROLE_ADMIN", map);			
 		}		
 		String corporation = (String)map.get("corporation");
-		if(corporation.equalsIgnoreCase("Winfield Star-Tech")) {
+		if(corporation.equalsIgnoreCase("Winfield Star-Tech") || u.isAllowNonWST()) {
 			addRole("ROLE_WST_USER", map);
-		}
+		} 
 	}
 	private void addRole(String role, Map<String, Object> map) {
 		String authorities = (String) map.get("authorities");
