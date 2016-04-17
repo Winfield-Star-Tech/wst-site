@@ -54,9 +54,18 @@ public class DefaultPageController{
 	@Autowired
 	private EveUserRepository userRepository;
 	
+	@RequestMapping(value = "/unauthorised" , method = RequestMethod.GET) 
+	public String unauthorised(HttpServletRequest request, HttpServletResponse response) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth != null){    
+	        new SecurityContextLogoutHandler().logout(request, response, auth);
+	    }
+		return "redirect:/#/unauthorised";
+	}
+	
 	@RequestMapping("/")
 	public String greeting(Model model) {
-		return "index";
+		return "angular";
 	}
 	@RequestMapping("/admin")
 	public String admin(Model model) {

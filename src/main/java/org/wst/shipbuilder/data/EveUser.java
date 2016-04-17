@@ -16,6 +16,25 @@ public class EveUser {
 	
 	private Date lastLoginDate;
 	
+	private boolean allowNonWST = false;
+	
+	public boolean isWstUser() {
+		return corporationName.equalsIgnoreCase("Winfield Star-Tech");
+	}
+	
+	public boolean isLoginAllowed() {
+		
+		return isWstUser() || isAllowNonWST();
+	}
+	
+	public boolean isAllowNonWST() {
+		return allowNonWST;
+	}
+
+	public void setAllowNonWST(boolean allowNonWST) {
+		this.allowNonWST = allowNonWST;
+	}
+
 	public Date getLastLoginDate() {
 		return lastLoginDate;
 	}
