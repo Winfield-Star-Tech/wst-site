@@ -58,7 +58,7 @@ public class WSTSecurityConfigurerAdapter  extends WebSecurityConfigurerAdapter 
 				.antMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().hasRole("WST_USER")
 //				.anyRequest().authenticated()
-			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
+			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("partials/loginerror::content"))
 			.and().logout().logoutSuccessUrl("/").permitAll()
 			.and().csrf().csrfTokenRepository(csrfTokenRepository())
 			.and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)

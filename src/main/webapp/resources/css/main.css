@@ -16,7 +16,8 @@ table, caption, tbody, tfoot, thead, tr, th, td {
   vertical-align: baseline; }
 
 body {
-  line-height: 1; }
+  line-height: 1;
+   }
 
 h1, h2, h3, h4, h5, h6 {
   clear: both;
@@ -56,7 +57,8 @@ a img {
   box-sizing: border-box; }
 
 body {
-  background-color: #616565;
+  /*background-color: #616565;*/
+  background-image: url("/resources/images/citadel2.jpg");
   color: #505050;
   font-family: "Ubuntu", sans-serif;
   font-weight: 300;
@@ -83,8 +85,13 @@ a:hover {
 
 #main {
   background-color: #fff;
-  padding-top: 150px; }
-
+  opacity: 0.3;
+  padding-top: 150px; 
+  
+  }
+#content-text {
+	color: black;
+}
 .container {
   width: 80%;
   margin: 0 auto;
@@ -106,7 +113,9 @@ section {
 /* =Info Bar
 -------------------------------------------------------------- */
 #info-bar {
-  background-color: #616565; }
+  background-color: #616565; 
+  opacity: 0.5;
+  }
   #info-bar a {
     color: white;
     font-size: 14px;
@@ -146,6 +155,7 @@ header {
   left: 0;
   z-index: 999;
   background-color: #0b1616;
+  opacity: 0.5;
   -webkit-transition: height 0.3s;
   -moz-transition: height 0.3s;
   -ms-transition: height 0.3s;
@@ -193,6 +203,9 @@ header {
 
 /* =Footer
 -------------------------------------------------------------- */
+footer {
+	
+}
 /* =Extras
 -------------------------------------------------------------- */
 .clearfix:after {
