@@ -67,6 +67,10 @@ public class DefaultPageController{
 	public String greeting(Model model) {
 		return "angular";
 	}
+	@RequestMapping("/home")
+	public String home(Model model) {
+		return "index";
+	}
 	@RequestMapping("/admin")
 	public String admin(Model model) {
 		Iterable<EveUser> users = userRepository.findAll();

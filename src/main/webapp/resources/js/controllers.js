@@ -33,8 +33,8 @@ eveuserControllers.controller("SecurityCtrl", function($http, $location) {
       self.user = data.name;
       if(!!data.name && data.name.length > 0)
     	  self.authenticated = true;
-      	  self.hasWSTRole = (data.userAuthentication.authorities.indexOf("ROLE_WST_USER") > -1);
-      	  self.hasAdminRole = (data.userAuthentication.authorities.indexOf("ROLE_ADMIN") > -1);
+      	  self.hasWSTRole = (data.userAuthentication.details.authorities.indexOf("ROLE_WST_USER") > -1);
+      	  self.hasAdminRole = (data.userAuthentication.details.authorities.indexOf("ROLE_ADMIN") > -1);
       	  
     }).error(function() {
       self.user = "N/A";

@@ -69,19 +69,19 @@
 	<div id="main">
 		<div id="content">
 			<section>
-				<div class="container" ng-view="">
+				<div id="content-text" class="container" ng-view="">
 
 				</div>
 			</section>
 		</div>
 	</div>
-
+<footer>
    <div id="info-bar">
     <div class="container clearfix">
 	<span  class="login-details"  ng-show="sec.authenticated">Logged in as: <span class="login-details"  ng-bind="sec.user"></span></span>
         
     </div>
 </div>
-
+</footer>
 </body>
 </html>
