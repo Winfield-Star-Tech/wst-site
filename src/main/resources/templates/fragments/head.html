@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head th:fragment="headtag">
+    <title>WST Site</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+    <link rel='stylesheet' href='webjars/bootstrap/3.2.0/css/bootstrap.min.css'/>
+    <link rel='stylesheet' th:href="@{/resources/css/main.css}" href="/resources/css/main.css"/>
+    <script  type="text/javascript" th:src="@{/resources/js/main_layout.js}" src="/resources/js/main_layout.js"/> 
+    <script>
+    function init() {
+        window.addEventListener('scroll', function(e){
+            var distanceY = window.pageYOffset || document.documentElement.scrollTop,
+                shrinkOn = 300,
+                header = document.querySelector("header");
+            if (distanceY > shrinkOn) {
+                classie.add(header,"smaller");
+            } else {
+                if (classie.has(header,"smaller")) {
+                    classie.remove(header,"smaller");
+                }
+            }
+        });
+    }
+    window.onload = init();
+</script>
+</head>
+<body>
+
+</body>
+</html>
