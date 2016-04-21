@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/dependency/jetty-runner.jar --port $PORT target/*.war
+web: java $JAVA_OPTS -jar target/wst-site-0.1.0.jar --server.port=$PORT --spring.config.name=heroku-application

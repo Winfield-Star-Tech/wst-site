@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headtag"/> 
+<body>
+   
+
+
+<div id="wrapper">
+
+<header th:replace="fragments/header :: header"/>
+
+<div id="main">
+    <div id="content">
+        <section>
+            <div class="container">
+        <div th:if="${param.error}">
+            Invalid username and password.
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <a th:href="@{/login/evesso}"><img th:src="@{/resources/images/EVE_SSO_Login_Buttons_Small_Black.png}"/></a>
+        
+        </div>
+       </section>
+    </div>
+</div><!-- #main -->
+
+
+<footer>
+<div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+<!-- /#top-bar -->
+</footer><!-- /footer -->
+
+
+
+</div><!-- /#wrapper -->
+<script type="text/javascript" src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="webjars/jquery/2.1.1/jquery.min.js"></script>
+</body>
+</html>
