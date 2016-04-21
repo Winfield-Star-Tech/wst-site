@@ -1,6 +1,7 @@
 package org.wst.shipbuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +30,15 @@ public class AngularController extends WebMvcConfigurerAdapter {
 	
 	@Bean
 	  public EmbeddedServletContainerCustomizer customizer() {
-	    return container -> {
-	      container.addErrorPages(
-	          new ErrorPage(HttpStatus.UNAUTHORIZED, "/unauthorised"));
-	    };
+	    EmbeddedServletContainerCustomizer e = new EmbeddedServletContainerCustomizer() {
+			
+			@Override
+			public void customize(ConfigurableEmbeddedServletContainer container) {
+	    		container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/unauthorised"));
+				
+			}
+		};
+		return e;
+	   
 	  }
 }
