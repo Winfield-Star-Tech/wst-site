@@ -1,3 +1,2 @@
-The OpenShift `jbosseap` cartridge documentation can be found at:
-
-http://openshift.github.io/documentation/oo_cartridge_guide.html#jbosseap
+# WST Site
+Prototype website for WST - Built with Spring-MVC & Thymeleaf deploying to Heroku
