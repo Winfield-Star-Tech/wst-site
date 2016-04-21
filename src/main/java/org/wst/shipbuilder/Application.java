@@ -6,9 +6,13 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -22,13 +26,17 @@ import org.springframework.transaction.PlatformTransactionManager;
 @SpringBootApplication
 @Configuration
 @EnableJpaRepositories
-public class Application {
+public class Application extends SpringBootServletInitializer {
 
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
+    }
 	static Logger log = Logger.getLogger(Application.class.getName());
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
+/*
     @Bean
     public DriverManagerDataSource dataSource()  {
     	
@@ -61,7 +69,9 @@ public class Application {
     	dataSource.setUsername(dbUsername);
     	dataSource.setPassword(dbPassword);
     	return dataSource;
-    }
+    }*/
+    @Autowired
+    private DataSource dataSource;
     @Bean
     public EntityManagerFactory entityManagerFactory() {
 
@@ -71,7 +81,7 @@ public class Application {
       LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
       factory.setJpaVendorAdapter(vendorAdapter);
       factory.setPackagesToScan("org.wst.shipbuilder.data");
-      factory.setDataSource(dataSource());
+      factory.setDataSource(dataSource);
       factory.afterPropertiesSet();
 
       return factory.getObject();
