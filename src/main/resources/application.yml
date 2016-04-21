@@ -1,0 +1,27 @@
+evesso:
+  client:
+    clientId: 55df9334f37e4e96a0e373bfe621658c
+    clientSecret: iylulvPNU422wL9xrynoze5chVznoJxTGXivIVls
+    accessTokenUri: https://login.eveonline.com/oauth/token
+    userAuthorizationUri: https://login.eveonline.com/oauth/authorize
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+    scope: publicData
+  resource:
+    userInfoUri: https://login.eveonline.com/oauth/verify
+
+logging:
+  level:
+    org.wst: DEBUG
+#    org.springframework.http.converter: TRACE
+#    org.springframework.web.client: DEBUG
+  file: application.log
+
+spring:
+  resources:
+    chain:
+      enabled: true
+      
+      
+      

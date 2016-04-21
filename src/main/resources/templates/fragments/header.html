@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta charset="ISO-8859-1"/>
 <title>Insert title here</title>
@@ -12,8 +13,14 @@
             W-S-T Site
         </h1>
         <nav>
-            <a href="">Haephtstus Status</a>
-            <a href="">Ship Orders</a>
+            <a href="/">Home</a>
+            <a sec:authorize="isAuthenticated()"  th:href="@{/operation-hephaestus}">Operation Hephaestus</a>
+            <a  sec:authorize="isAuthenticated()" th:href="@{/ship-orders}">Ship Orders</a>
+  <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Log out</a>
+
+  <a sec:authorize="isAnonymous()" th:href="@{/login}">Log in</a>
+  <a sec:authorize="hasRole('ROLE_ADMIN')"  th:href="@{/admin}">Admin</a>
+
            
         </nav>
     </div>

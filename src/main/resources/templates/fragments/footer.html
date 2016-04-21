@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
   <head>
   </head>
   <body>
     <div th:fragment="footer">
     <div id="info-bar">
     <div class="container clearfix">
-        <span class="all-tutorials"><a href="/">Home</a></span>
+        <span class="all-tutorials" sec:authorize="hasRole('ROLE_WST_USER')">You have W-S-T Privileges</span>
+        <span class="login-details" sec:authorize="isAuthenticated()" th:text="'You are logged in as ' + ${#authentication.name} + '@' +${#authentication.corporation}"></span>
+        
     </div>
 </div>
     </div>
