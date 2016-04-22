@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @Configuration
 public class GroupController {
-	@Autowired  String myBean;
+	
 
 	 private JdbcTemplate jdbcTemplate;
 
