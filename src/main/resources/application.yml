@@ -22,7 +22,7 @@ spring:
   resources:
     chain:
       enabled: true
-  datasource
+  datasource:
     jndi-name: java:jboss/datasources/PostgreSQLDS
       
       
