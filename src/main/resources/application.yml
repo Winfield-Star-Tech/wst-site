@@ -24,6 +24,6 @@ spring:
       enabled: true
   datasource:
     jndi-name: java:jboss/datasources/PostgreSQLDS
-      
-      
+    
+
       

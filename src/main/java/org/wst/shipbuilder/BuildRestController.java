@@ -1,8 +1,13 @@
 package org.wst.shipbuilder;
 
+import javax.annotation.Resource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +34,24 @@ public class BuildRestController {
 		createDefaultEntry();
 	}
 
+
+	@Bean
+
+	private String corpEveKey() throws NamingException {
+		return (String)InitialContext.doLookup("java:global/corp-eve-key");
+	}
+	
+
+	@RequestMapping("/mykey")
+	public String getEveKey() {
+		try {
+			return corpEveKey();
+		} catch (NamingException e) {
+			return "Can't find key";
+		
+		}
+	}
+	
 	private void createDefaultEntry() {
 		// TODO Auto-generated method stub
 		

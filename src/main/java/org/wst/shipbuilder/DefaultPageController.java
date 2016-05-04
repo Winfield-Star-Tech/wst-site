@@ -2,6 +2,9 @@ package org.wst.shipbuilder;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

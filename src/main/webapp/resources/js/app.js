@@ -15,6 +15,22 @@ wstSiteApp.config(['$routeProvider',
                           templateUrl: '/angular/partial/useradmin',
                           controller: 'UserListCtrl'
                         }).
+                        when('/Market', {
+                            templateUrl: '/angular/partial/market',
+                            controller: 'UserListCtrl'
+                          }).
+                          when('/Lounge', {
+                              templateUrl: '/angular/partial/lounge',
+                              controller: 'UserListCtrl'
+                            }).
+                            when('/Factory', {
+                                templateUrl: '/angular/partial/factory',
+                                controller: 'UserListCtrl'
+                              }).
+                              when('/Hangar', {
+                                  templateUrl: '/angular/partial/hangar',
+                                  controller: 'UserListCtrl'
+                                }).
                         when('/hephaestus', {
                             templateUrl: '/angular/partial/hephaestus',
                             controller: 'HephaestusCtrl'
