@@ -54,7 +54,7 @@ public class WSTSecurityConfigurerAdapter  extends WebSecurityConfigurerAdapter 
 						"/login**", "/webjars/**",  
 						"/resources/**", "/toshuu",
 						"/rest/users/**",
-						"/angular/", "/angular/partial/main").permitAll()
+						"/angular/", "/angular/partial/main", "/mykey").permitAll()
 				.antMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().hasRole("WST_USER")
 //				.anyRequest().authenticated()
