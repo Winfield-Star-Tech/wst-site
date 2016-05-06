@@ -35,22 +35,6 @@ public class BuildRestController {
 	}
 
 
-	@Bean
-
-	private String corpEveKey() throws NamingException {
-		return (String)InitialContext.doLookup("java:global/corp-eve-key");
-	}
-	
-
-	@RequestMapping("/mykey")
-	public String getEveKey() {
-		try {
-			return corpEveKey();
-		} catch (NamingException e) {
-			return "Can't find key";
-		
-		}
-	}
 	
 	private void createDefaultEntry() {
 		// TODO Auto-generated method stub
