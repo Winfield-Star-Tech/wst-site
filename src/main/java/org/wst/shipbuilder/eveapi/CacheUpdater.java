@@ -49,7 +49,8 @@ public class CacheUpdater {
 	public CorpApiKey corpKey() throws NamingException {
 		String keyData = System.getenv("CORP_EVE_KEY");
 		if(keyData == null || keyData.trim().length() == 0) {
-			keyData = (String)InitialContext.doLookup("java:global/corp-eve-key");
+			logger.error("Could not get env CORP_EVE_KEY=" + keyData);
+			//keyData = (String)InitialContext.doLookup("java:global/corp-eve-key");
 		}
 		
 		String[] fields = keyData.split(",");
