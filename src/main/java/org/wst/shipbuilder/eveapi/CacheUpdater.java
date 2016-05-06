@@ -47,7 +47,11 @@ public class CacheUpdater {
 	
 	@Bean
 	public CorpApiKey corpKey() throws NamingException {
-		String keyData = (String)InitialContext.doLookup("java:global/corp-eve-key");
+		String keyData = System.getenv("CORP_EVE_KEY");
+		if(keyData == null || keyData.trim().length() == 0) {
+			keyData = (String)InitialContext.doLookup("java:global/corp-eve-key");
+		}
+		
 		String[] fields = keyData.split(",");
 		
 		CorpApiKey k = new CorpApiKey();
@@ -80,14 +84,6 @@ public class CacheUpdater {
 			
 			characterRepo.delete(charsToRemove);
 			characterRepo.save(charsToAdd);
-			Iterable<EveCharacter> chars = characterRepo.findAll();
-			for(EveCharacter c : chars) {
-				ZKillBoardCharEntry zc = getKillboardForChar(c.getCharacterID());
-				c.setShipsDestroyed(zc.getShipsDestroyed());
-				c.setShipsLost(zc.getShipsLost());
-				logger.info("Updated killboard for " + c.getName());
-				characterRepo.save(c);
-			}
 		} catch (NamingException e) {
 			logger.error("Error downloading characters", e);
 		}
@@ -95,6 +91,20 @@ public class CacheUpdater {
 		
 		
 	}
+	
+	@Scheduled(initialDelay=10000, fixedRate=3600000)
+	public void updateKillboard() {
+		Iterable<EveCharacter> chars = characterRepo.findAll();
+		for(EveCharacter c : chars) {
+			ZKillBoardCharEntry zc = getKillboardForChar(c.getCharacterID());
+			c.setShipsDestroyed(zc.getShipsDestroyed());
+			c.setShipsLost(zc.getShipsLost());
+			logger.info("Updated killboard for " + c.getName());
+			characterRepo.save(c);
+		}
+		
+	}
+	
 	public List<EveCharacter> downloadCorpMemberList() throws NamingException {
 		String queryString = String.format(CORP_MEMBER_TRACK_URL, corpKey().getKeyid(), corpKey().getVerificationCode());
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -105,14 +115,11 @@ public class CacheUpdater {
 			Document doc = builder.parse(queryString);
 			parseMemberTracking(doc, downloadedChars);
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error downloading character list", e);
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error downloading character list", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error downloading character list", e);
 		}
 		return downloadedChars;
 	}
