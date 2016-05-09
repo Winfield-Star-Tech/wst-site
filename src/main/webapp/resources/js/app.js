@@ -19,30 +19,30 @@ wstSiteApp.config(['$routeProvider',
                             templateUrl: '/angular/partial/market',
                             controller: 'UserListCtrl'
                           }).
-                          when('/Lounge', {
-                              templateUrl: '/angular/partial/lounge',
-                              controller: 'UserListCtrl'
-                            }).
-                            when('/Factory', {
-                                templateUrl: '/angular/partial/factory',
-                                controller: 'UserListCtrl'
-                              }).
-                              when('/Hangar', {
-                                  templateUrl: '/angular/partial/hangar',
-                                  controller: 'UserListCtrl'
-                                }).
+                        when('/Lounge', {
+                            templateUrl: '/angular/partial/lounge',
+                            controller: 'UserListCtrl'
+                        }).
+                        when('/Factory', {
+                            templateUrl: '/angular/partial/factory',
+                            controller: 'UserListCtrl'
+                        }).
+                        when('/Hangar', {
+                            templateUrl: '/angular/partial/hangar',
+                            controller: 'KbListCtrl'
+                        }).
                         when('/hephaestus', {
                             templateUrl: '/angular/partial/hephaestus',
                             controller: 'HephaestusCtrl'
-                          }).
-	                      when('/shiporders', {
-	                          templateUrl: '/angular/partial/shiporders',
-	                          controller: 'OrdersCtrl'
-	                        }).
-	                      when('/unauthorised', {
-	                          templateUrl: '/angular/partial/unauthorised',
-	                          controller: 'DefaultCtrl'
-	                        }).
+                        }).
+	                    when('/shiporders', {
+	                        templateUrl: '/angular/partial/shiporders',
+	                        controller: 'OrdersCtrl'
+	                    }).
+	                    when('/unauthorised', {
+	                        templateUrl: '/angular/partial/unauthorised',
+	                        controller: 'DefaultCtrl'
+	                    }).
                         otherwise({
                           redirectTo: '/'
                         });

@@ -6,10 +6,34 @@
 </head>
 <body>
 
-<div th:fragment="content" id="main-content">
+<div th:fragment="content" id="main-content" ng-controller="KbListCtrl">
 				<h1>Hangar</h1>
 				Hangar like functionality, such as pvp list and ship doctrines
-
+<div>
+				<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#killboardDiv">Show Killboard</button>
+</div>
+  <div id="killboardDiv" class="collapse">
+				<h2>Killboard</h2>
+				<table class="table">
+				<caption>All Time WST Top PvP Pilots</caption>
+				<thead>
+					<tr>
+						<th>Character</th>
+						<th>Ship Kills</th>
+						<th>Ships Lost</th>
+						<th>Net Kills</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="e in kblist">
+					<td>{{e.name}}</td>
+					<td>{{e.shipsDestroyed}}</td>
+					<td>{{e.shipsLost}}</td>
+					<td>{{e.shipDestroyedBalance}}</td>
+				</tr>
+				</tbody>
+				</table>
+</div>
 </div>
 
 </body>

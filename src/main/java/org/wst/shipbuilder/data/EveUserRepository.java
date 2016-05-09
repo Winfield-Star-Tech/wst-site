@@ -1,9 +1,12 @@
 package org.wst.shipbuilder.data;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
 
-public interface EveUserRepository extends CrudRepository<EveUser, Long>{
-	
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+public interface EveUserRepository extends PagingAndSortingRepository<EveUser, Long>{
 	
 
 }
