@@ -2,7 +2,9 @@ package org.wst.shipbuilder.eveapi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -50,7 +52,7 @@ public class CacheUpdater {
 		String keyData = System.getenv("CORP_EVE_KEY");
 		if(keyData == null || keyData.trim().length() == 0) {
 			logger.error("Could not get env CORP_EVE_KEY=" + keyData);
-			//keyData = (String)InitialContext.doLookup("java:global/corp-eve-key");
+			keyData = (String)InitialContext.doLookup("java:global/corp-eve-key");
 		}
 		
 		String[] fields = keyData.split(",");
@@ -67,19 +69,31 @@ public class CacheUpdater {
 		List<EveCharacter> downloadedChars = null;
 		try {
 			downloadedChars = downloadCorpMemberList();
-			List<EveCharacter> currentChars = new ArrayList<EveCharacter>();
+			Map<Long, EveCharacter> currentChars = new HashMap<Long,EveCharacter>();
 			for(EveCharacter c : characterRepo.findAll()) {
-				currentChars.add(c);
+				currentChars.put(c.getCharacterID(),c);
 			}
 			logger.info("Database has  " + currentChars.size() + " characters");
 			logger.info("Downloaded details of  " + downloadedChars.size() + " characters");
 			
 			
 			
-			List<EveCharacter> charsToRemove = new ArrayList<EveCharacter>(currentChars);
-			charsToRemove.removeAll(downloadedChars);
-			List<EveCharacter> charsToAdd = new ArrayList<EveCharacter>(downloadedChars);
-			charsToAdd.removeAll(currentChars);
+			List<EveCharacter> charsToRemove = new ArrayList<EveCharacter>();
+			List<EveCharacter> charsToAdd = new ArrayList<EveCharacter>();
+			Map<Long, EveCharacter>dlMap = new HashMap<Long, EveCharacter>();
+			for(EveCharacter c : downloadedChars) {
+				dlMap.put(c.getCharacterID(), c);
+				if(!currentChars.containsKey(c.getCharacterID())) {
+					charsToAdd.add(c);
+				}
+			}
+			for(Long currentID : currentChars.keySet()) {
+				if(!dlMap.containsKey(currentID)) {
+					// Can't find a character in the downloaded set remove it from database
+					charsToRemove.add(currentChars.get(currentID));
+				}
+			}
+			
 			logger.info("Removing " + charsToRemove.size() + " characters");
 			logger.info("Adding " + charsToAdd.size() + " characters");
 			
@@ -100,6 +114,7 @@ public class CacheUpdater {
 			ZKillBoardCharEntry zc = getKillboardForChar(c.getCharacterID());
 			c.setShipsDestroyed(zc.getShipsDestroyed());
 			c.setShipsLost(zc.getShipsLost());
+			c.setShipDestroyedBalance(c.getShipsDestroyed() - c.getShipsLost());
 			logger.info("Updated killboard for " + c.getName());
 			characterRepo.save(c);
 		}

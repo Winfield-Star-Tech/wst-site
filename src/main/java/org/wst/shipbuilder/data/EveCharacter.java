@@ -64,4 +64,13 @@ public class EveCharacter {
 		this.name = name;
 	}
 	
+	private long shipDestroyedBalance;
+	
+	public long getShipDestroyedBalance() {
+		return shipDestroyedBalance;
+	}
+	
+	public void setShipDestroyedBalance(long b) {
+		shipDestroyedBalance = b;
+	}
 }

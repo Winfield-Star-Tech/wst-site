@@ -11,6 +11,10 @@ eveuserControllers.controller('UserListCtrl', ['$scope', '$log', 'User', functio
 		  
 	  };
 	}]);
+
+eveuserControllers.controller('KbListCtrl', ['$scope', '$log', 'KbList', function($scope, $log, KbList) {
+	  $scope.kblist = KbList.query();
+	}]);
 eveuserControllers.controller('DefaultCtrl', ['$scope', '$log', function($scope, $log) {
 
 	}]);
