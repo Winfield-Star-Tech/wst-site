@@ -70,30 +70,8 @@ public class DefaultPageController{
 	public String greeting(Model model) {
 		return "angular";
 	}
-	@RequestMapping("/home")
-	public String home(Model model) {
-		return "index";
-	}
-	@RequestMapping("/admin")
-	public String admin(Model model) {
-		Iterable<EveUser> users = userRepository.findAll();
-		model.addAttribute("users", users);
-		return "admin";
-	}
 	
-	@RequestMapping("/toshuu")
-	public String toshuu(Model model) {
-		return "toshuu";
-	}
-	@RequestMapping("/operation-hephaestus")
-	public String hephaestus(Model model) {
-		model.addAttribute("donations", donations + (1E7 * Math.random()));
-		return "Hephaestus";
-	}
-	@RequestMapping("/ship-orders")
-	public String shipOrders(Model model) {
-		return "ship-orders";
-	}	
+		
 	@RequestMapping("/login")
 	public String login(Model model) {
 		return "login";

@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  */
 public class DataDownloadTest {
 
-	@Test
+/*	@Test
 	public void testCharDownload() throws ParserConfigurationException, SAXException, IOException {
 		CacheUpdater upd = new CacheUpdater();
 		List<EveCharacter> downloadedChars = new ArrayList<EveCharacter>();
@@ -48,4 +48,4 @@ public class DataDownloadTest {
 		ZKillBoardCharEntry zkbEntry = upd.getKillboardForChar(1950740146);
 		Assert.assertEquals("Kalfar", zkbEntry.getName());
 	}
-}
+*/}
