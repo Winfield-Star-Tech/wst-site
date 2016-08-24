@@ -63,7 +63,7 @@ public class CacheUpdater {
 		return k;
 	}
 	// Six hour delay
-	@Scheduled(initialDelay=1000, fixedRate=21600000)
+	//@Scheduled(initialDelay=1000, fixedRate=21600000)
 	public void refreshCorpMembers() {
 		logger.info("Refreshing Corp Member Cache");
 		List<EveCharacter> downloadedChars = null;
@@ -107,7 +107,7 @@ public class CacheUpdater {
 		
 	}
 	
-	@Scheduled(initialDelay=10000, fixedRate=3600000)
+	//@Scheduled(initialDelay=10000, fixedRate=3600000)
 	public void updateKillboard() {
 		Iterable<EveCharacter> chars = characterRepo.findAll();
 		for(EveCharacter c : chars) {

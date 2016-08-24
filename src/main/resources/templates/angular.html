@@ -44,15 +44,13 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li  class="active"><a href="#">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
-        <li sec:authorize="hasRole('ROLE_WST_USER')"><a href="#/">Lounge<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-headphones"></span></a></li>
+        <li  class="active"><a href="#/">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+        <li ><a href="#/about">About WST<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span></a></li>
+        <li sec:authorize="hasRole('ROLE_WST_USER')"><a href="#/newbro">Newbro Info<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-headphones"></span></a></li>
         <li>
           <a  sec:authorize="!hasRole('ROLE_WST_USER')"  href="/login/evesso" >Log In<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-user"></span></a>
           <a  sec:authorize="hasRole('ROLE_WST_USER')"  href="/logout" >Log Out<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-user"></span></a>
         </li>          
-        <li ><a  sec:authorize="hasRole('ROLE_WST_USER')"  href="#/Market">Market<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-usd"></span></a></li>        
-        <li ><a  sec:authorize="hasRole('ROLE_WST_USER')"  href="#/Factory">Factory<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a></li>        
-        <li ><a  sec:authorize="hasRole('ROLE_WST_USER')"  href="#/Hangar">Hangar<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-indent-left"></span></a></li>
       </ul>
     </div>
   </div>
