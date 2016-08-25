@@ -20,6 +20,10 @@ body {
 div#wst-title, div#main-content {
 	color: orange;
 }
+div#main-content p {
+	color: black;
+}
+
  @media (min-width: 765px) {
 
     .main{

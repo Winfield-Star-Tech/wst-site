@@ -15,6 +15,10 @@ wstSiteApp.config(['$routeProvider',
                             templateUrl: '/angular/partial/about',
                             controller: 'UserListCtrl'
                         }).
+                        when('/newbro', {
+                            templateUrl: '/angular/partial/newbro',
+                            controller: 'UserListCtrl'
+                        }).
                         when('/useradmin', {
                           templateUrl: '/angular/partial/useradmin',
                           controller: 'UserListCtrl'
