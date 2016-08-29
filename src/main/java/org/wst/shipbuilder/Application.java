@@ -36,40 +36,6 @@ public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-/*
-    @Bean
-    public DriverManagerDataSource dataSource()  {
-    	
-    	DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    	String dbUrlEnv = System.getenv("DATABASE_URL");
-    	String dbHost = "localhost";
-    	int dbPort = 5432;
-    	String dbPath = "wst-site";
-    	String dbUsername = "wst-site";
-    	String dbPassword = "wst-site1";
-    	if (dbUrlEnv != null) {
-    		//dbUrlEnv = dbUrlEnv.replace("jdbc:postgresql", "http");
-    		URI dbUrl;
-			try {
-				dbUrl = new URI(dbUrlEnv);
-	    		dbHost = dbUrl.getHost();
-	    		dbPort = dbUrl.getPort();
-	    		dbPath = dbUrl.getPath();
-	    		dbUsername = dbUrl.getUserInfo().split(":")[0];
-	    		dbPassword = dbUrl.getUserInfo().split(":")[1];
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
-    	}
-    	log.info("url = " + "jdbc:postgresql://" + dbHost + ":" + dbPort + dbPath);
-    	log.info("user = " + dbUsername);
-    	log.info("password = " + dbPassword);
-    	dataSource.setDriverClassName("org.postgresql.Driver");
-    	dataSource.setUrl("jdbc:postgresql://" + dbHost + ":" + dbPort + dbPath);
-    	dataSource.setUsername(dbUsername);
-    	dataSource.setPassword(dbPassword);
-    	return dataSource;
-    }*/
     @Autowired
     private DataSource dataSource;
     @Bean
