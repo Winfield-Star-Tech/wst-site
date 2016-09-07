@@ -1,4 +1,5 @@
 package org.wst.shipbuilder;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +23,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.wst.shipbuilder.data.fittings.CorpFitService;
 
 
 @SpringBootApplication
@@ -59,6 +62,10 @@ public class Application extends SpringBootServletInitializer {
       JpaTransactionManager txManager = new JpaTransactionManager();
       txManager.setEntityManagerFactory(entityManagerFactory());
       return txManager;
+    }
+    @Bean
+    public CorpFitService corpFitService() throws JAXBException, IOException {
+    	return new CorpFitService();
     }
    
 }
