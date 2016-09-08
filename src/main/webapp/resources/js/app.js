@@ -39,14 +39,6 @@ wstSiteApp.config(['$routeProvider',
                             templateUrl: '/angular/partial/hangar',
                             controller: 'KbListCtrl'
                         }).
-                        when('/hephaestus', {
-                            templateUrl: '/angular/partial/hephaestus',
-                            controller: 'HephaestusCtrl'
-                        }).
-	                    when('/shiporders', {
-	                        templateUrl: '/angular/partial/shiporders',
-	                        controller: 'OrdersCtrl'
-	                    }).
 	                    when('/unauthorised', {
 	                        templateUrl: '/angular/partial/unauthorised',
 	                        controller: 'DefaultCtrl'

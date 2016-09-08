@@ -57,6 +57,15 @@ public class DefaultPageController{
 	@Autowired
 	private EveUserRepository userRepository;
 	
+	@RequestMapping(value="/throwerror") 
+	public String throwError() throws Exception {
+		if(true) {
+			throw new Exception("e");
+			
+		}
+		return "foo";
+	}
+	
 	@RequestMapping(value = "/unauthorised" , method = RequestMethod.GET) 
 	public String unauthorised(HttpServletRequest request, HttpServletResponse response) {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();

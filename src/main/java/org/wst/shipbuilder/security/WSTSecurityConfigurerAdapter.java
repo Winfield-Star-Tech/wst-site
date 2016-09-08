@@ -52,13 +52,16 @@ public class WSTSecurityConfigurerAdapter  extends WebSecurityConfigurerAdapter 
 			.authorizeRequests()				
 				.antMatchers("/", 
 						"/login**", "/webjars/**",  
-						"/resources/**", "/toshuu",
+						"/resources/**", 
 						"/rest/users/**",
-						"/angular/", "/angular/partial/main", "/angular/partial/about", "/mykey").permitAll()
+						"/angular/", "/angular/partial/main","/angular/partial/loginerror", 
+						"/angular/partial/unauthorised",
+						"/angular/partial/about",  
+						"/error").permitAll()
 				.antMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().hasRole("WST_USER")
 //				.anyRequest().authenticated()
-			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("partials/loginerror::content"))
+			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login/evesso"))
 			.and().logout().logoutSuccessUrl("/").permitAll()
 			.and().csrf().csrfTokenRepository(csrfTokenRepository())
 			.and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)

@@ -34,17 +34,18 @@ public class AngularController extends WebMvcConfigurerAdapter {
 	  registry.addViewController("/angular/partial/newbro").setViewName("partials/newbro::content");
 	 }
 	
-	@Bean
+/*	@Bean
 	  public EmbeddedServletContainerCustomizer customizer() {
 	    EmbeddedServletContainerCustomizer e = new EmbeddedServletContainerCustomizer() {
 			
 			@Override
 			public void customize(ConfigurableEmbeddedServletContainer container) {
-	    		container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/unauthorised"));
+	    		container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/error"));
 				
 			}
 		};
 		return e;
 	   
 	  }
+	*/
 }

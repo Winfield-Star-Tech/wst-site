@@ -118,7 +118,9 @@ public class EveUserInfoTokenServices  implements ResourceServerTokenServices {
 		String corporation = (String)map.get("corporation");
 		if(corporation.equalsIgnoreCase("Winfield Star-Tech") || u.isAllowNonWST()) {
 			addRole("ROLE_WST_USER", map);
-		} 
+		} else {
+			throw new NonWSTUserException(u);
+		}
 	}
 	private void addRole(String role, Map<String, Object> map) {
 		String authorities = (String) map.get("authorities");
